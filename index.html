@@ -1,89 +1,130 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Islamic Quiz Platform</title>
+
 <style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, sans-serif;
+}
+
 body{
-    font-family:Arial;
-    background:linear-gradient(to right,#1f4037,#99f2c8);
+    background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
     display:flex;
     justify-content:center;
     align-items:center;
-    height:100vh;
+    min-height:100vh;
+    padding:15px;
 }
 
-.container{
+.card{
     background:white;
-    width:520px;
+    width:100%;
+    max-width:500px;
     padding:20px;
-    border-radius:10px;
+    border-radius:12px;
+    box-shadow:0 15px 30px rgba(0,0,0,0.4);
+}
+
+h2{
+    text-align:center;
+    margin-bottom:15px;
+    color:#2c5364;
 }
 
 input{
     width:100%;
-    padding:7px;
-    margin:5px 0;
+    padding:10px;
+    margin:6px 0;
+    border-radius:6px;
+    border:1px solid #ccc;
 }
 
 button{
     width:100%;
-    padding:8px;
-    margin:5px 0;
-    background:#1f4037;
-    color:white;
+    padding:10px;
+    margin-top:8px;
     border:none;
+    border-radius:6px;
+    background:#2c5364;
+    color:white;
+    font-weight:bold;
     cursor:pointer;
+}
+
+button:hover{
+    opacity:0.9;
 }
 
 .hidden{display:none;}
 
-.option{margin:4px 0;}
+.option{
+    margin:8px 0;
+}
 
-#result{font-weight:bold;margin-top:10px;}
+.option input{
+    margin-right:8px;
+}
+
+#result{
+    margin-top:12px;
+    font-weight:bold;
+}
+
+@media(max-width:480px){
+    .card{
+        padding:15px;
+    }
+}
 </style>
 </head>
+
 <body>
 
-<div class="container">
+<div class="card">
 
-<!-- AUTH -->
-<div id="authSection">
-<h2>Login</h2>
-<input type="text" id="username" placeholder="Username">
-<input type="password" id="password" placeholder="Password">
-<button onclick="login()">Login</button>
-<p id="authMessage"></p>
+<!-- LOGIN -->
+<div id="loginSection">
+    <h2>Login</h2>
+    <input type="text" id="username" placeholder="Username">
+    <input type="password" id="password" placeholder="Password">
+    <button onclick="login()">Login</button>
+    <p id="message"></p>
 </div>
 
 <!-- ADMIN PANEL -->
-<div id="adminPanel" class="hidden">
-<h2>Admin Panel</h2>
-
-<input type="text" id="newQuestion" placeholder="Question">
-<input type="text" id="opt1" placeholder="Option 1">
-<input type="text" id="opt2" placeholder="Option 2">
-<input type="text" id="opt3" placeholder="Option 3">
-<input type="text" id="opt4" placeholder="Option 4">
-<input type="text" id="correctAnswer" placeholder="Correct Answer (write exact option text)">
-<button onclick="addQuestion()">Add Question</button>
-<button onclick="logout()">Logout</button>
+<div id="adminSection" class="hidden">
+    <h2>Admin Panel</h2>
+    <input type="text" id="qText" placeholder="Question">
+    <input type="text" id="o1" placeholder="Option 1">
+    <input type="text" id="o2" placeholder="Option 2">
+    <input type="text" id="o3" placeholder="Option 3">
+    <input type="text" id="o4" placeholder="Option 4">
+    <input type="text" id="ans" placeholder="Correct Answer (Exact Option Text)">
+    <button onclick="addQuestion()">Add Question</button>
+    <button onclick="logout()">Logout</button>
 </div>
 
 <!-- QUIZ -->
 <div id="quizSection" class="hidden">
-<h2>Islamic MCQs</h2>
-<div id="quiz"></div>
-<button onclick="nextQuestion()">Next</button>
-<button onclick="submitQuiz()">Submit</button>
-<button onclick="logout()">Logout</button>
-<div id="result"></div>
+    <h2>Islamic MCQ Quiz</h2>
+    <div id="quizBox"></div>
+    <button onclick="nextQuestion()">Next</button>
+    <button onclick="submitQuiz()">Submit</button>
+    <button onclick="logout()">Logout</button>
+    <div id="result"></div>
 </div>
 
 </div>
 
 <script>
 
-// Default 20 Questions
+// ================= DEFAULT QUESTIONS =================
 let defaultQuestions = [
 {q:"How many Farz in Wudu?",options:["2","3","4","5"],answer:"4"},
 {q:"How many Farz in Ghusl?",options:["2","3","4","5"],answer:"3"},
@@ -107,91 +148,93 @@ let defaultQuestions = [
 {q:"Sujood means?",options:["Standing","Sitting","Prostration","Bowing"],answer:"Prostration"}
 ];
 
+// Load from storage
 let questions = JSON.parse(localStorage.getItem("questions")) || defaultQuestions;
-localStorage.setItem("questions",JSON.stringify(questions));
+localStorage.setItem("questions", JSON.stringify(questions));
 
-// LOGIN
+let currentQuestion = 0;
+let score = 0;
+
+// ================= LOGIN =================
 function login(){
-let user=document.getElementById("username").value;
-let pass=document.getElementById("password").value;
+    let user = document.getElementById("username").value;
+    let pass = document.getElementById("password").value;
 
-if(user==="admin" && pass==="admin123"){
-    showAdmin();
-}
-else{
-    showQuiz();
-}
+    if(user === "admin" && pass === "admin123"){
+        showAdmin();
+    } else {
+        showQuiz();
+    }
 }
 
 function logout(){
-location.reload();
+    location.reload();
 }
 
-// ADMIN
+// ================= ADMIN =================
 function showAdmin(){
-document.getElementById("authSection").classList.add("hidden");
-document.getElementById("adminPanel").classList.remove("hidden");
+    document.getElementById("loginSection").classList.add("hidden");
+    document.getElementById("adminSection").classList.remove("hidden");
 }
 
 function addQuestion(){
-let q=document.getElementById("newQuestion").value;
-let options=[
-document.getElementById("opt1").value,
-document.getElementById("opt2").value,
-document.getElementById("opt3").value,
-document.getElementById("opt4").value
-];
-let ans=document.getElementById("correctAnswer").value;
+    let newQ = {
+        q: document.getElementById("qText").value,
+        options: [
+            document.getElementById("o1").value,
+            document.getElementById("o2").value,
+            document.getElementById("o3").value,
+            document.getElementById("o4").value
+        ],
+        answer: document.getElementById("ans").value
+    };
 
-questions.push({q:q,options:options,answer:ans});
-localStorage.setItem("questions",JSON.stringify(questions));
-
-alert("Question Added Successfully!");
+    questions.push(newQ);
+    localStorage.setItem("questions", JSON.stringify(questions));
+    alert("Question Added Successfully!");
 }
 
-// QUIZ
-let currentQuestion=0;
-let score=0;
-
+// ================= QUIZ =================
 function showQuiz(){
-document.getElementById("authSection").classList.add("hidden");
-document.getElementById("quizSection").classList.remove("hidden");
-loadQuestion();
+    document.getElementById("loginSection").classList.add("hidden");
+    document.getElementById("quizSection").classList.remove("hidden");
+    loadQuestion();
 }
 
 function loadQuestion(){
-if(currentQuestion>=questions.length)return;
+    if(currentQuestion >= questions.length) return;
 
-let quizDiv=document.getElementById("quiz");
-let q=questions[currentQuestion];
+    let q = questions[currentQuestion];
+    let box = document.getElementById("quizBox");
 
-quizDiv.innerHTML=`<p><strong>Q${currentQuestion+1}:</strong> ${q.q}</p>`;
+    box.innerHTML = `<p><strong>Q${currentQuestion+1}:</strong> ${q.q}</p>`;
 
-q.options.forEach(opt=>{
-quizDiv.innerHTML+=`
-<div class="option">
-<input type="radio" name="option" value="${opt}">
-${opt}
-</div>`;
-});
+    q.options.forEach(opt => {
+        box.innerHTML += `
+            <div class="option">
+                <input type="radio" name="option" value="${opt}">${opt}
+            </div>
+        `;
+    });
 }
 
 function nextQuestion(){
-let selected=document.querySelector('input[name="option"]:checked');
-if(selected && selected.value===questions[currentQuestion].answer){
-score++;
-}
-currentQuestion++;
-if(currentQuestion<questions.length){
-loadQuestion();
-}else{
-submitQuiz();
-}
+    let selected = document.querySelector('input[name="option"]:checked');
+    if(selected && selected.value === questions[currentQuestion].answer){
+        score++;
+    }
+    currentQuestion++;
+
+    if(currentQuestion < questions.length){
+        loadQuestion();
+    } else {
+        submitQuiz();
+    }
 }
 
 function submitQuiz(){
-document.getElementById("result").innerText=
-"Your Score: "+score+" / "+questions.length;
+    document.getElementById("result").innerText =
+    "Your Score: " + score + " / " + questions.length;
 }
 
 </script>
