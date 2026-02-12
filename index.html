@@ -1,251 +1,109 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Islamic Quiz Platform</title>
-
+<title>Aymi Snacks | Karachi</title>
 <style>
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family: 'Segoe UI', sans-serif;
-}
+  /* Reset & basic styles */
+  * {margin:0;padding:0;box-sizing:border-box;font-family:sans-serif;}
+  body {background:#fff8f0;color:#333;}
+  a {text-decoration:none;color:inherit;}
+  img {max-width:100%;border-radius:10px;}
 
-body{
-    background:linear-gradient(135deg,#0f3443,#34e89e);
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    min-height:100vh;
-    padding:15px;
-}
+  /* Header */
+  header {background:linear-gradient(90deg, #ff7f50, #ff6347);color:white;padding:20px;text-align:center;}
+  header h1 {font-size:2rem;margin-bottom:5px;}
+  header p {font-size:1rem;}
 
-.card{
-    width:100%;
-    max-width:450px;
-    background:#ffffff;
-    padding:25px;
-    border-radius:18px;
-    box-shadow:0 20px 40px rgba(0,0,0,0.3);
-}
+  /* Banner */
+  .banner {background:#ffd700;color:#333;text-align:center;padding:10px;font-weight:bold;margin-top:10px;border-radius:8px;margin:10px;}
 
-h2{
-    text-align:center;
-    margin-bottom:15px;
-    color:#0f3443;
-}
+  /* Section titles */
+  h2 {color:#ff4500;margin:15px 0;text-align:center;}
 
-input{
-    width:100%;
-    padding:12px;
-    margin:8px 0;
-    border-radius:8px;
-    border:1px solid #ccc;
-}
+  /* Products */
+  .products {display:flex;flex-wrap:wrap;gap:10px;padding:10px;justify-content:center;}
+  .product {background:#fff0e0;padding:10px;border-radius:10px;width:45%;text-align:center;box-shadow:0 4px 6px rgba(0,0,0,0.1);}
+  .product h3 {color:#ff4500;margin:10px 0;}
+  .product p {margin:5px 0;font-weight:bold;}
+  .order-btn {background:#ff6347;color:white;padding:8px 12px;border:none;border-radius:5px;margin-top:10px;cursor:pointer;font-weight:bold;}
+  .order-btn:hover {background:#ff4500;}
 
-button{
-    width:100%;
-    padding:12px;
-    margin-top:10px;
-    border:none;
-    border-radius:8px;
-    background:linear-gradient(135deg,#0f3443,#34e89e);
-    color:white;
-    font-weight:bold;
-    cursor:pointer;
-    transition:0.3s;
-}
+  /* About & Contact */
+  .section {padding:15px;margin:10px;border-radius:10px;background:#fff0e0;box-shadow:0 4px 6px rgba(0,0,0,0.1);}
+  .section p {margin:8px 0;}
 
-button:hover{
-    opacity:0.85;
-}
+  /* Contact buttons */
+  .contact-btn {display:inline-block;background:#ff6347;color:white;padding:8px 12px;border-radius:5px;margin-top:5px;}
+  .contact-btn:hover {background:#ff4500;}
 
-.switch{
-    text-align:center;
-    margin-top:10px;
-    font-size:14px;
-    cursor:pointer;
-    color:#0f3443;
-}
-
-.hidden{display:none;}
-
-.option{
-    background:#f4f4f4;
-    padding:10px;
-    margin:6px 0;
-    border-radius:8px;
-}
-
-.option input{
-    margin-right:8px;
-}
-
-#result{
-    margin-top:15px;
-    font-weight:bold;
-    text-align:center;
-    color:#0f3443;
-}
-
-@media(max-width:480px){
-    .card{
-        padding:18px;
-    }
-}
+  /* Footer */
+  footer {text-align:center;padding:10px;margin-top:20px;color:#666;font-size:0.9rem;}
 </style>
 </head>
-
 <body>
 
-<div class="card">
+<header>
+  <h1>Aymi Snacks</h1>
+  <p>Fresh Samosa, Rolls & More | Keamari West, Karachi</p>
+</header>
 
-<!-- AUTH SECTION -->
-<div id="authSection">
-    <h2 id="authTitle">Sign In</h2>
-    <input type="text" id="username" placeholder="Username">
-    <input type="password" id="password" placeholder="Password">
-    <button onclick="handleAuth()">Continue</button>
-    <div class="switch" onclick="toggleMode()" id="switchText">
-        Don't have an account? Sign Up
+<div class="banner">
+  🌙 Ramadan Specials: Kachay Samosa & Spring Rolls! Order Now 🌙
+</div>
+
+<section>
+  <h2>Our Snacks</h2>
+  <div class="products">
+    <div class="product">
+      <img src="https://i.imgur.com/1fQ2F3W.jpg" alt="Samosa">
+      <h3>Samosa</h3>
+      <p>Price: 150 PKR</p>
+      <button class="order-btn" onclick="orderWhatsApp('Samosa')">Order Now</button>
     </div>
-    <p id="message"></p>
-</div>
+    <div class="product">
+      <img src="https://i.imgur.com/5Xg0rXH.jpg" alt="Roll Samosa">
+      <h3>Roll Samosa</h3>
+      <p>Price: 200 PKR</p>
+      <button class="order-btn" onclick="orderWhatsApp('Roll Samosa')">Order Now</button>
+    </div>
+    <div class="product">
+      <img src="https://i.imgur.com/uXGyvNs.jpg" alt="Murhi">
+      <h3>Murhi</h3>
+      <p>Price: 100 PKR</p>
+      <button class="order-btn" onclick="orderWhatsApp('Murhi')">Order Now</button>
+    </div>
+    <div class="product">
+      <img src="https://i.imgur.com/LVv5O1U.jpg" alt="Kachay Samosa">
+      <h3>Kachay Samosa</h3>
+      <p>Price: 240 PKR</p>
+      <button class="order-btn" onclick="orderWhatsApp('Kachay Samosa')">Order Now</button>
+    </div>
+  </div>
+</section>
 
-<!-- QUIZ SECTION -->
-<div id="quizSection" class="hidden">
-    <h2>🕌 Islamic Quiz</h2>
-    <div id="quizBox"></div>
-    <button onclick="nextQuestion()">Next</button>
-    <button onclick="submitQuiz()">Submit</button>
-    <button onclick="logout()">Logout</button>
-    <div id="result"></div>
-</div>
+<section class="section">
+  <h2>About Us</h2>
+  <p>We are a small family-owned snack business in Keamari West, Karachi. We take pride in serving fresh, tasty Samosa, Rolls, Murhi, and Namak Para. During Ramadan, our special Kachay Samosa and Spring Rolls are loved by everyone!</p>
+</section>
 
-</div>
+<section class="section">
+  <h2>Contact & Location</h2>
+  <p>📍 Location: Keamari West, Karachi</p>
+  <p>📞 Phone: <a href="tel:+923242441758" class="contact-btn">+92 324 2441758</a></p>
+  <p>✉ Email: <a href="mailto:shaheenayman786@gmail.com" class="contact-btn">shaheenayman786@gmail.com</a></p>
+</section>
+
+<footer>
+  &copy; 2026 Aymi Snacks | All Rights Reserved
+</footer>
 
 <script>
-
-// ================= STATE =================
-let isLogin = true;
-let users = JSON.parse(localStorage.getItem("users")) || {};
-let currentUser = null;
-
-// ================= TOGGLE SIGN IN / SIGN UP =================
-function toggleMode(){
-    isLogin = !isLogin;
-
-    document.getElementById("authTitle").innerText = 
-        isLogin ? "Sign In" : "Sign Up";
-
-    document.getElementById("switchText").innerText =
-        isLogin ? "Don't have an account? Sign Up" : "Already have an account? Sign In";
+function orderWhatsApp(item) {
+  let message = encodeURIComponent(`Hello! I want to order ${item} from Aymi Snacks.`);
+  window.open(`https://wa.me/923242441758?text=${message}`, '_blank');
 }
-
-// ================= AUTH =================
-function handleAuth(){
-    let user = document.getElementById("username").value.trim();
-    let pass = document.getElementById("password").value.trim();
-    let message = document.getElementById("message");
-
-    if(!user || !pass){
-        message.innerText = "Please fill all fields.";
-        return;
-    }
-
-    if(isLogin){
-        if(users[user] && users[user] === pass){
-            currentUser = user;
-            showQuiz();
-        } else {
-            message.innerText = "Invalid credentials.";
-        }
-    } else {
-        if(users[user]){
-            message.innerText = "User already exists.";
-        } else {
-            users[user] = pass;
-            localStorage.setItem("users", JSON.stringify(users));
-            message.innerText = "Account created! Now Sign In.";
-            toggleMode();
-        }
-    }
-}
-
-// ================= LOGOUT =================
-function logout(){
-    location.reload();
-}
-
-// ================= QUIZ =================
-const questions = [
-{q:"How many Farz in Wudu?",options:["2","3","4","5"],answer:"4"},
-{q:"How many Farz in Ghusl?",options:["2","3","4","5"],answer:"3"},
-{q:"How many Farz in Tayammum?",options:["2","3","4","5"],answer:"3"},
-{q:"Facing which direction in Wudu?",options:["East","West","Qiblah","North"],answer:"Qiblah"},
-{q:"How many Rakats in Fajr Farz?",options:["2","3","4","5"],answer:"2"},
-{q:"How many Rakats in Zuhr Farz?",options:["2","3","4","5"],answer:"4"},
-{q:"How many Rakats in Asr Farz?",options:["2","3","4","5"],answer:"4"},
-{q:"How many Rakats in Maghrib Farz?",options:["2","3","4","5"],answer:"3"},
-{q:"How many Rakats in Isha Farz?",options:["2","3","4","5"],answer:"4"},
-{q:"Total daily Farz Rakats?",options:["12","15","17","20"],answer:"17"},
-{q:"First Kalima?",options:["Tayyibah","Shahadah","Tamjeed","Radd-e-Kufr"],answer:"Tayyibah"},
-{q:"Number of daily prayers?",options:["3","4","5","6"],answer:"5"},
-{q:"Wudu breaks by sleeping?",options:["Yes","No"],answer:"Yes"},
-{q:"Salah is pillar number?",options:["1","2","3","4","5"],answer:"2"},
-{q:"Adhan is called before?",options:["Wudu","Salah","Ghusl","Tayammum"],answer:"Salah"},
-{q:"Sujood in one rakat?",options:["1","2","3","4"],answer:"2"},
-{q:"Tashahhud recited while?",options:["Standing","Ruku","Sitting","Sujood"],answer:"Sitting"},
-{q:"Qiyam means?",options:["Standing","Sitting","Bowing","Prostration"],answer:"Standing"},
-{q:"Ruku means?",options:["Standing","Bowing","Sitting","Sleeping"],answer:"Bowing"},
-{q:"Sujood means?",options:["Standing","Sitting","Prostration","Bowing"],answer:"Prostration"}
-];
-
-let currentQuestion = 0;
-let score = 0;
-
-function showQuiz(){
-    document.getElementById("authSection").classList.add("hidden");
-    document.getElementById("quizSection").classList.remove("hidden");
-    loadQuestion();
-}
-
-function loadQuestion(){
-    let q = questions[currentQuestion];
-    let box = document.getElementById("quizBox");
-
-    box.innerHTML = `<p><strong>Q${currentQuestion+1}:</strong> ${q.q}</p>`;
-
-    q.options.forEach(opt=>{
-        box.innerHTML += `
-        <div class="option">
-        <input type="radio" name="option" value="${opt}">${opt}
-        </div>`;
-    });
-}
-
-function nextQuestion(){
-    let selected = document.querySelector('input[name="option"]:checked');
-    if(selected && selected.value === questions[currentQuestion].answer){
-        score++;
-    }
-    currentQuestion++;
-
-    if(currentQuestion < questions.length){
-        loadQuestion();
-    } else {
-        submitQuiz();
-    }
-}
-
-function submitQuiz(){
-    document.getElementById("result").innerText =
-        currentUser + ", Your Score: " + score + " / " + questions.length;
-}
-
 </script>
 
 </body>
