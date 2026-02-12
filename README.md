@@ -64,12 +64,6 @@ This project was built to:
 
 ---
 
-## 🌍 Live Demo
-
-(You can add your deployed link here later)
-
----
-
 ## 👩‍💻 Author
 
 Ayman Shaheen  
