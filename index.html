@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,11 +11,11 @@
     margin:0;
     padding:0;
     box-sizing:border-box;
-    font-family:Arial, sans-serif;
+    font-family: 'Segoe UI', sans-serif;
 }
 
 body{
-    background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+    background:linear-gradient(135deg,#0f3443,#34e89e);
     display:flex;
     justify-content:center;
     align-items:center;
@@ -23,48 +24,60 @@ body{
 }
 
 .card{
-    background:white;
     width:100%;
-    max-width:500px;
-    padding:20px;
-    border-radius:12px;
-    box-shadow:0 15px 30px rgba(0,0,0,0.4);
+    max-width:450px;
+    background:#ffffff;
+    padding:25px;
+    border-radius:18px;
+    box-shadow:0 20px 40px rgba(0,0,0,0.3);
 }
 
 h2{
     text-align:center;
     margin-bottom:15px;
-    color:#2c5364;
+    color:#0f3443;
 }
 
 input{
     width:100%;
-    padding:10px;
-    margin:6px 0;
-    border-radius:6px;
+    padding:12px;
+    margin:8px 0;
+    border-radius:8px;
     border:1px solid #ccc;
 }
 
 button{
     width:100%;
-    padding:10px;
-    margin-top:8px;
+    padding:12px;
+    margin-top:10px;
     border:none;
-    border-radius:6px;
-    background:#2c5364;
+    border-radius:8px;
+    background:linear-gradient(135deg,#0f3443,#34e89e);
     color:white;
     font-weight:bold;
     cursor:pointer;
+    transition:0.3s;
 }
 
 button:hover{
-    opacity:0.9;
+    opacity:0.85;
+}
+
+.switch{
+    text-align:center;
+    margin-top:10px;
+    font-size:14px;
+    cursor:pointer;
+    color:#0f3443;
 }
 
 .hidden{display:none;}
 
 .option{
-    margin:8px 0;
+    background:#f4f4f4;
+    padding:10px;
+    margin:6px 0;
+    border-radius:8px;
 }
 
 .option input{
@@ -72,13 +85,15 @@ button:hover{
 }
 
 #result{
-    margin-top:12px;
+    margin-top:15px;
     font-weight:bold;
+    text-align:center;
+    color:#0f3443;
 }
 
 @media(max-width:480px){
     .card{
-        padding:15px;
+        padding:18px;
     }
 }
 </style>
@@ -88,31 +103,21 @@ button:hover{
 
 <div class="card">
 
-<!-- LOGIN -->
-<div id="loginSection">
-    <h2>Login</h2>
+<!-- AUTH SECTION -->
+<div id="authSection">
+    <h2 id="authTitle">Sign In</h2>
     <input type="text" id="username" placeholder="Username">
     <input type="password" id="password" placeholder="Password">
-    <button onclick="login()">Login</button>
+    <button onclick="handleAuth()">Continue</button>
+    <div class="switch" onclick="toggleMode()" id="switchText">
+        Don't have an account? Sign Up
+    </div>
     <p id="message"></p>
 </div>
 
-<!-- ADMIN PANEL -->
-<div id="adminSection" class="hidden">
-    <h2>Admin Panel</h2>
-    <input type="text" id="qText" placeholder="Question">
-    <input type="text" id="o1" placeholder="Option 1">
-    <input type="text" id="o2" placeholder="Option 2">
-    <input type="text" id="o3" placeholder="Option 3">
-    <input type="text" id="o4" placeholder="Option 4">
-    <input type="text" id="ans" placeholder="Correct Answer (Exact Option Text)">
-    <button onclick="addQuestion()">Add Question</button>
-    <button onclick="logout()">Logout</button>
-</div>
-
-<!-- QUIZ -->
+<!-- QUIZ SECTION -->
 <div id="quizSection" class="hidden">
-    <h2>Islamic MCQ Quiz</h2>
+    <h2>🕌 Islamic Quiz</h2>
     <div id="quizBox"></div>
     <button onclick="nextQuestion()">Next</button>
     <button onclick="submitQuiz()">Submit</button>
@@ -124,8 +129,59 @@ button:hover{
 
 <script>
 
-// ================= DEFAULT QUESTIONS =================
-let defaultQuestions = [
+// ================= STATE =================
+let isLogin = true;
+let users = JSON.parse(localStorage.getItem("users")) || {};
+let currentUser = null;
+
+// ================= TOGGLE SIGN IN / SIGN UP =================
+function toggleMode(){
+    isLogin = !isLogin;
+
+    document.getElementById("authTitle").innerText = 
+        isLogin ? "Sign In" : "Sign Up";
+
+    document.getElementById("switchText").innerText =
+        isLogin ? "Don't have an account? Sign Up" : "Already have an account? Sign In";
+}
+
+// ================= AUTH =================
+function handleAuth(){
+    let user = document.getElementById("username").value.trim();
+    let pass = document.getElementById("password").value.trim();
+    let message = document.getElementById("message");
+
+    if(!user || !pass){
+        message.innerText = "Please fill all fields.";
+        return;
+    }
+
+    if(isLogin){
+        if(users[user] && users[user] === pass){
+            currentUser = user;
+            showQuiz();
+        } else {
+            message.innerText = "Invalid credentials.";
+        }
+    } else {
+        if(users[user]){
+            message.innerText = "User already exists.";
+        } else {
+            users[user] = pass;
+            localStorage.setItem("users", JSON.stringify(users));
+            message.innerText = "Account created! Now Sign In.";
+            toggleMode();
+        }
+    }
+}
+
+// ================= LOGOUT =================
+function logout(){
+    location.reload();
+}
+
+// ================= QUIZ =================
+const questions = [
 {q:"How many Farz in Wudu?",options:["2","3","4","5"],answer:"4"},
 {q:"How many Farz in Ghusl?",options:["2","3","4","5"],answer:"3"},
 {q:"How many Farz in Tayammum?",options:["2","3","4","5"],answer:"3"},
@@ -148,73 +204,26 @@ let defaultQuestions = [
 {q:"Sujood means?",options:["Standing","Sitting","Prostration","Bowing"],answer:"Prostration"}
 ];
 
-// Load from storage
-let questions = JSON.parse(localStorage.getItem("questions")) || defaultQuestions;
-localStorage.setItem("questions", JSON.stringify(questions));
-
 let currentQuestion = 0;
 let score = 0;
 
-// ================= LOGIN =================
-function login(){
-    let user = document.getElementById("username").value;
-    let pass = document.getElementById("password").value;
-
-    if(user === "admin" && pass === "admin123"){
-        showAdmin();
-    } else {
-        showQuiz();
-    }
-}
-
-function logout(){
-    location.reload();
-}
-
-// ================= ADMIN =================
-function showAdmin(){
-    document.getElementById("loginSection").classList.add("hidden");
-    document.getElementById("adminSection").classList.remove("hidden");
-}
-
-function addQuestion(){
-    let newQ = {
-        q: document.getElementById("qText").value,
-        options: [
-            document.getElementById("o1").value,
-            document.getElementById("o2").value,
-            document.getElementById("o3").value,
-            document.getElementById("o4").value
-        ],
-        answer: document.getElementById("ans").value
-    };
-
-    questions.push(newQ);
-    localStorage.setItem("questions", JSON.stringify(questions));
-    alert("Question Added Successfully!");
-}
-
-// ================= QUIZ =================
 function showQuiz(){
-    document.getElementById("loginSection").classList.add("hidden");
+    document.getElementById("authSection").classList.add("hidden");
     document.getElementById("quizSection").classList.remove("hidden");
     loadQuestion();
 }
 
 function loadQuestion(){
-    if(currentQuestion >= questions.length) return;
-
     let q = questions[currentQuestion];
     let box = document.getElementById("quizBox");
 
     box.innerHTML = `<p><strong>Q${currentQuestion+1}:</strong> ${q.q}</p>`;
 
-    q.options.forEach(opt => {
+    q.options.forEach(opt=>{
         box.innerHTML += `
-            <div class="option">
-                <input type="radio" name="option" value="${opt}">${opt}
-            </div>
-        `;
+        <div class="option">
+        <input type="radio" name="option" value="${opt}">${opt}
+        </div>`;
     });
 }
 
@@ -234,7 +243,7 @@ function nextQuestion(){
 
 function submitQuiz(){
     document.getElementById("result").innerText =
-    "Your Score: " + score + " / " + questions.length;
+        currentUser + ", Your Score: " + score + " / " + questions.length;
 }
 
 </script>
